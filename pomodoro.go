@@ -18,16 +18,13 @@ func pomodoro(c *cli.Context) {
 
 	go pb.Listen()
 
-	go func() {
-		pb.Println("func")
+	func() {
 		all := 15 * 60
 		for i := 0; i <= all; i++ {
-			cr(i)
+			cr(100 * i / all)
 			time.Sleep(1 * time.Second)
-			fmt.Println(i)
 		}
 	}()
-	fmt.Println("pomodoro", c.Args().First())
 }
 
 func main() {
