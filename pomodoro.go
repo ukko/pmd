@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
+	"os/exec"
 	"time"
 
 	"github.com/codegangsta/cli"
@@ -25,6 +27,15 @@ func pomodoro(c *cli.Context) {
 			time.Sleep(1 * time.Second)
 		}
 	}()
+
+	cmd := exec.Command("/usr/bin/cvlc", "--play-and-exit", "--no-loop", "./alarm.oga")
+	err := cmd.Start()
+	if err != nil {
+		log.Fatal(err)
+	}
+	log.Printf("Waiting for command to finish...")
+	err = cmd.Wait()
+	log.Printf("Command finished with error: %v", err)
 }
 
 func main() {
