@@ -5,6 +5,8 @@ import (
 
 	"github.com/codegangsta/cli"
 	"github.com/sethgrid/multibar"
+
+	"github.com/ukko/pmd/alerts"
 )
 
 func Pomodoro(c *cli.Context) {
@@ -16,10 +18,13 @@ func Pomodoro(c *cli.Context) {
 	go pb.Listen()
 
 	func() {
-		all := 15 * 60
+		all := 1 * 60
 		for i := 0; i <= all; i++ {
 			cr(100 * i / all)
 			time.Sleep(1 * time.Second)
 		}
 	}()
+
+	go alerts.Notify("Сделай перерыв")
+	go alerts.Play()
 }
