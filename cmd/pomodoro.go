@@ -18,13 +18,13 @@ func Pomodoro(c *cli.Context) {
 	go pb.Listen()
 
 	func() {
-		all := 1 * 60
+		all := 25 * 60
 		for i := 0; i <= all; i++ {
 			cr(100 * i / all)
 			time.Sleep(1 * time.Second)
 		}
 	}()
 
-	go alerts.Notify("Сделай перерыв")
-	go alerts.Play()
+	alerts.Notify("Сделай перерыв")
+	alerts.Play()
 }
