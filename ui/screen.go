@@ -5,18 +5,36 @@ import (
 	"github.com/nsf/termbox-go"
 )
 
+const (
+	BORDER_VERTICAL            = '│'
+	BORDER_HORIZONTAL          = '─'
+	BORDER_CORNER_LEFT_TOP     = '┌'
+	BORDER_CORNER_RIGHT_TOP    = '┐'
+	BORDER_CORNER_LEFT_BOTTOM  = '└'
+	BORDER_CORNER_RIGHT_BOTTOM = '┘'
+)
+
 func drawScreen() {
 	width, height := termbox.Size()
 
-	for x := 0; x < width; x++ {
-		termbox.SetCell(x, 0, '-', termbox.ColorWhite, termbox.ColorBlack)
-		termbox.SetCell(x, height-1, '-', termbox.ColorWhite, termbox.ColorBlack)
+	termbox.SetCell(0, 0, BORDER_CORNER_LEFT_TOP, termbox.ColorWhite, termbox.ColorBlack)
+	termbox.SetCell(width-1, 0, BORDER_CORNER_RIGHT_TOP, termbox.ColorWhite, termbox.ColorBlack)
+	termbox.SetCell(0, height-1, BORDER_CORNER_LEFT_BOTTOM, termbox.ColorWhite, termbox.ColorBlack)
+	termbox.SetCell(width-1, height-1, BORDER_CORNER_RIGHT_BOTTOM, termbox.ColorWhite, termbox.ColorBlack)
+
+	for x := 1; x < width-1; x++ {
+		termbox.SetCell(x, 0, BORDER_HORIZONTAL, termbox.ColorWhite, termbox.ColorBlack)
+		termbox.SetCell(x, height-1, BORDER_HORIZONTAL, termbox.ColorWhite, termbox.ColorBlack)
 	}
 
 	for y := 1; y < height-1; y++ {
-		termbox.SetCell(0, y, '|', termbox.ColorWhite, termbox.ColorBlack)
-		termbox.SetCell(width-1, y, '|', termbox.ColorWhite, termbox.ColorBlack)
+		termbox.SetCell(0, y, BORDER_VERTICAL, termbox.ColorWhite, termbox.ColorBlack)
+		termbox.SetCell(width-1, y, BORDER_VERTICAL, termbox.ColorWhite, termbox.ColorBlack)
 	}
+}
+
+func redrawAll() {
+	drawScreen()
 }
 
 // Init main screen
@@ -30,7 +48,7 @@ func Init(c *cli.Context) {
 
 	termbox.SetInputMode(termbox.InputEsc | termbox.InputMouse)
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
-	drawScreen()
+	redrawAll()
 	termbox.Flush()
 
 loop:
@@ -43,11 +61,11 @@ loop:
 			}
 		case termbox.EventResize:
 			termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
-			drawScreen()
+			redrawAll()
 			termbox.Flush()
 		case termbox.EventMouse:
 			termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
-			drawScreen()
+			redrawAll()
 			termbox.Flush()
 		case termbox.EventError:
 			panic(ev.Err)
