@@ -1,7 +1,8 @@
 package ui
 
 import (
-	"github.com/codegangsta/cli"
+	"time"
+
 	"github.com/nsf/termbox-go"
 )
 
@@ -38,7 +39,7 @@ func redrawAll() {
 }
 
 // Init main screen
-func Init(c *cli.Context) {
+func Init() {
 	err := termbox.Init()
 	if err != nil {
 		panic(err)
@@ -48,6 +49,12 @@ func Init(c *cli.Context) {
 
 	termbox.SetInputMode(termbox.InputEsc | termbox.InputMouse)
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
+
+	width, _ := termbox.Size()
+
+	progress := Progress{Title: "WORK", X: 1, Y: 1, W: width - 2, H: 3, Duration: time.Minute * 25}
+	progress.Start()
+
 	redrawAll()
 	termbox.Flush()
 
@@ -63,10 +70,10 @@ loop:
 			termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
 			redrawAll()
 			termbox.Flush()
-		case termbox.EventMouse:
-			termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
-			redrawAll()
-			termbox.Flush()
+		//case termbox.EventMouse:
+		//termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
+		//redrawAll()
+		//termbox.Flush()
 		case termbox.EventError:
 			panic(ev.Err)
 		}
