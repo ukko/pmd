@@ -9,11 +9,11 @@ import (
 	"github.com/ukko/pmd/ui"
 )
 
-func Pomodoro(c *cli.Context) {
+func Short(c *cli.Context) {
 	ui.Init()
-	ui.NewBar("Work", time.Minute*25, true, func(state byte) {
+	ui.NewBar("Short", time.Minute*5, true, func(state byte) {
 		if state == ui.STATE_FINISHED {
-			alerts.Notify("Сделай перерыв")
+			alerts.Notify("Go work")
 			alerts.Play()
 		}
 	})

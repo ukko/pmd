@@ -15,6 +15,8 @@ const (
 	BORDER_CORNER_RIGHT_BOTTOM = '┘'
 )
 
+var bars []Progress
+
 func drawScreen() {
 	width, height := termbox.Size()
 
@@ -32,10 +34,39 @@ func drawScreen() {
 		termbox.SetCell(0, y, BORDER_VERTICAL, termbox.ColorWhite, termbox.ColorBlack)
 		termbox.SetCell(width-1, y, BORDER_VERTICAL, termbox.ColorWhite, termbox.ColorBlack)
 	}
+	for x := 1; x < width-1; x++ {
+		for y := 1; y < height-1; y++ {
+			termbox.SetCell(x, y, ' ', termbox.ColorDefault, termbox.ColorBlack)
+		}
+	}
 }
 
+// Redraw all elements
 func redrawAll() {
 	drawScreen()
+
+	for _, bar := range bars {
+		bar.Redraw()
+	}
+}
+
+// Create new bars
+func NewBar(title string, duration time.Duration, start bool, finish func(state byte)) error {
+	width, _ := termbox.Size()
+
+	progress := Progress{Title: title, X: 1, Y: len(bars) + 1, W: width - 2, H: 1, Duration: duration}
+
+	if start {
+		progress.Start()
+	}
+
+	if finish != nil {
+		progress.OnFinish = finish
+	}
+
+	bars = append(bars, progress)
+
+	return nil
 }
 
 // Init main screen
@@ -45,16 +76,15 @@ func Init() {
 		panic(err)
 	}
 
-	defer termbox.Close()
-
 	termbox.SetInputMode(termbox.InputEsc | termbox.InputMouse)
 	termbox.Clear(termbox.ColorDefault, termbox.ColorDefault)
 
-	width, _ := termbox.Size()
+}
 
-	progress := Progress{Title: "WORK", X: 1, Y: 1, W: width - 2, H: 3, Duration: time.Minute * 25}
-	progress.Start()
+// Main loop
+func MainLoop() {
 
+	defer termbox.Close()
 	redrawAll()
 	termbox.Flush()
 

@@ -1,11 +1,8 @@
 package cmd
 
-import (
-	"github.com/codegangsta/cli"
-	"github.com/ukko/pmd/ui"
-)
+import "github.com/codegangsta/cli"
 
 // Default action
 func Default(c *cli.Context) {
-	ui.Init()
+	Pomodoro(c)
 }

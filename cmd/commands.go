@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/codegangsta/cli"
 )
 
@@ -17,15 +15,11 @@ var Commands = []cli.Command{
 		Name:      "long",
 		ShortName: "l",
 		Usage:     "run long break",
-		Action: func(c *cli.Context) {
-			fmt.Println("long", c.Args().First())
-		},
+		Action:    Long,
 	},
 	{
 		Name:      "short",
 		ShortName: "s",
 		Usage:     "run short break",
-		Action: func(c *cli.Context) {
-			fmt.Println("short", c.Args().First())
-		},
+		Action:    Short,
 	}}
